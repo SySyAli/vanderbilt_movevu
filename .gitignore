@@ -1,5 +1,7 @@
-# CSV Files
+# Data Files
 testing/WeGoAllData.csv
+testing/*.csv
+testing/MoveVU_Data.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
