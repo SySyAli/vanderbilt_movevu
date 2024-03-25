@@ -5,6 +5,8 @@ testing/MoveVU_Data.xml
 gtfs/*.txt
 csv/*.csv
 */.vscode
+*.parquet
+*.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

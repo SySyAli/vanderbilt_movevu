@@ -63,25 +63,11 @@ list_WE_GO_ALL_ROUTES.sort()
 print("Listed Routes:", list_WE_GO_ALL_ROUTES)
 print("Number of Routes:", len(list_WE_GO_ALL_ROUTES))
 
-# Define a function to read and preprocess CSV files
-def read_and_preprocess(csv_files):
-    dfs = []
-    for file in csv_files:
-        df = pd.read_csv(
-            file,
-            usecols=["ROUTE", "CARDOFFICE_CARD_NUMBER", "CARD_ID_STATUS", "RIDE_DATE", "BUS", "ROUTE", "RUN", "RT_AREA", "FIRST_NAME", "LAST_NAME", "EMPLOYEE_OR_STUDENT", "CAMPUS_ID"],
-            dtype={"ROUTE": str, "CARDOFFICE_CARD_NUMBER": str, "CARD_ID_STATUS": str, "RIDE_DATE": str, "BUS": str, "RUN": str, "RT_AREA": str, "FIRST_NAME": str, "LAST_NAME": str, "EMPLOYEE_OR_STUDENT": str, "CAMPUS_ID": str}
-        )
-        dfs.append(df)
-    return pd.concat(dfs, ignore_index=True)
-
-# Read and preprocess CSV files
-csv_files = ["./csv/MoveVU_2017_2020.csv", "./csv/MoveVU_2020_2022.csv", "./csv/MoveVU_2022_Oct2023.csv", "./csv/MoveVU_Oct2023_Dec2023.csv"]
-df = read_and_preprocess(csv_files)
-
+df = pd.read_parquet('movevu.parquet')
 # Data cleaning and preparation steps
 df['RIDE_DATE'] = pd.to_datetime(df['RIDE_DATE'])
 df['MONTH_YEAR'] = df['RIDE_DATE'].dt.strftime('%Y-%m')
+df['Hour'] = df['RIDE_DATE'].dt.hour
 
 # print("Max Date MM-YY", df['MONTH_YEAR'].max())
 # print(df['MONTH_YEAR'].unique())
@@ -101,7 +87,9 @@ app.layout = html.Div([
 
     # Dropdown or DatePickerRange for selecting the time period
     dcc.DatePickerRange(
-        id='date-picker-range',
+        id='topsix-date-picker-range',
+        min_date_allowed=df['MONTH_YEAR'].min(),
+        max_date_allowed=df['MONTH_YEAR'].max(),
         start_date=df['MONTH_YEAR'].min(),
         end_date=df['MONTH_YEAR'].max(),
         display_format='YYYY-MM'
@@ -110,18 +98,49 @@ app.layout = html.Div([
     dcc.Graph(id='routes-plot'),
     html.H1("Swipes per Month"),
     dcc.DatePickerRange(
-        id='end-date-picker-range',  # Changed ID to be unique
+        id='swipes-date-picker-range',  # Changed ID to be unique
         start_date=df['MONTH_YEAR'].min(),
         end_date=df['MONTH_YEAR'].max(),
         display_format='YYYY-MM'
     ),
     dcc.Graph(id='monthly-rides-graph'), 
+    
+    html.H1("Ridership by Time of Day"),
+    
+    html.Div([
+        html.Label("Select Date Range:"),
+        dcc.DatePickerRange(
+            id='timedayhr-date-picker-range',
+            min_date_allowed=df['MONTH_YEAR'].min(),
+            max_date_allowed=df['MONTH_YEAR'].max(),
+            start_date=df['MONTH_YEAR'].min(),
+            end_date=df['MONTH_YEAR'].max(),
+            display_format='YYYY-MM'
+        ),
+    ]),
+    
+    dcc.Graph(id='ridership-time-graph'),
+
+    html.H1("Unique Users per Month"),
+    
+    html.Div([
+        html.Label("Select Date Range for Unique Users:"),
+        dcc.DatePickerRange(
+            id='unique-users-date-picker-range',
+            start_date=df['MONTH_YEAR'].min(),
+            end_date=df['MONTH_YEAR'].max(),
+            display_format='YYYY-MM'
+        ),
+    ]),
+    
+    dcc.Graph(id='unique-users-graph'),
 ])
 
+# TOP 6 ROUTES GRAPH
 @app.callback(
     Output('routes-plot', 'figure'),
-    [Input('date-picker-range', 'start_date'),
-     Input('date-picker-range', 'end_date')]
+    [Input('topsix-date-picker-range', 'start_date'),
+     Input('topsix-date-picker-range', 'end_date')]
 )
 
 def update_routes_plot(start_date, end_date):
@@ -132,11 +151,11 @@ def update_routes_plot(start_date, end_date):
     fig = plot_all_routes_with_plotly(filtered_df)
     return fig
 
-# Callback to update the histogram
+# SWIPES PER MONTH HISTOGRAM
 @app.callback(
     Output('monthly-rides-graph', 'figure'),
-    [Input('end-date-picker-range', 'start_date'),
-     Input('end-date-picker-range', 'end_date')]
+    [Input('swipes-date-picker-range', 'start_date'),
+     Input('swipes-date-picker-range', 'end_date')]
 )
 
 def update_graph(start_date, end_date):
@@ -184,6 +203,64 @@ def plot_all_routes_with_plotly(route_month_counts):
                       yaxis_title='Number of Rides',
                       xaxis_tickangle=-45)
     return fig
+
+
+#EMPLOYEE OR STUDENT GRAPH
+@app.callback(
+    Output('ridership-time-graph', 'figure'),
+    [Input('timedayhr-date-picker-range', 'start_date'),
+     Input('timedayhr-date-picker-range', 'end_date')]
+)
+def update_graph(start_date, end_date):
+    # Filter the DataFrame based on the selected dates
+    filtered_df = df[(df['MONTH_YEAR'] >= start_date) & (df['MONTH_YEAR'] <= end_date)]
+    
+    # Aggregate rides by hour and status
+    peak_usage = filtered_df.groupby(['Hour', 'EMPLOYEE_OR_STUDENT']).size().unstack(fill_value=0)
+
+    # Create traces for each rider category
+    data = []
+    for column in peak_usage.columns:
+        data.append(go.Scatter(x=peak_usage.index, y=peak_usage[column], mode='lines', name=column))
+    
+    # Create the figure
+    fig = go.Figure(data=data)
+    fig.update_layout(
+        title="Peak Usage Times by Group",
+        xaxis_title="Hour of the Day",
+        yaxis_title="Number of Rides",
+        hovermode="x"
+    )
+    
+    return fig
+
+# Unique Users per Month Graph Callback
+# UNIQUE USERS GRAPH CALLBACK
+@app.callback(
+    Output('unique-users-graph', 'figure'),
+    [Input('unique-users-date-picker-range', 'start_date'),
+     Input('unique-users-date-picker-range', 'end_date')]
+)
+def update_unique_users_graph(start_date, end_date):
+    # Filter the DataFrame based on the selected dates
+    filtered_df = df[(df['RIDE_DATE'] >= start_date) & (df['RIDE_DATE'] <= end_date)]
+
+    # Process to get unique users per month
+    unique_users_per_month = (
+        filtered_df.drop_duplicates(subset=['CAMPUS_ID', 'MONTH_YEAR'])
+        .groupby(['MONTH_YEAR'])
+        .size()
+        .reset_index(name='UNIQUE_USERS')
+    )
+    
+    # Create the line plot
+    fig = px.line(unique_users_per_month, x='MONTH_YEAR', y='UNIQUE_USERS',
+                  title='Unique Users per Month',
+                  labels={'MONTH_YEAR': 'Month', 'UNIQUE_USERS': 'Number of Unique Users'})
+    fig.update_xaxes(tickangle=-45)
+    
+    return fig
+
 
 if __name__ == '__main__':
     app.run(debug=True)
