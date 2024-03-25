@@ -1,87 +1,165 @@
-# asttokens @ file:///home/conda/feedstock_root/build_artifacts/asttokens_1698341106958/work
+absl-py==2.1.0
+aiohttp==3.9.3
+aiosignal==1.3.1
+asttokens==2.4.1
+astunparse==1.6.3
 attrs==23.2.0
-blinker==1.7.0
+boto3==1.34.47
+botocore==1.34.47
 branca==0.7.1
-certifi==2023.11.17
+CacheControl==0.14.0
+cachelib==0.9.0
+cachetools==5.3.2
+certifi==2024.2.2
+cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
 click-plugins==1.1.1
 cligj==0.7.2
 colorama==0.4.6
-# comm @ file:///home/conda/feedstock_root/build_artifacts/comm_1704278392174/work
-conan==2.0.16
+colour==0.1.5
+comm==0.2.1
 contourpy==1.2.0
+coral-ordinal==0.1.8
 cycler==0.12.1
-dash==2.15.0
+dash==2.10.2
+dash-auth==2.0.0
+dash-bootstrap-components==1.4.1
 dash-core-components==2.0.0
 dash-html-components==2.0.0
+dash-iconify==0.1.2
+dash-mantine-components==0.12.1
 dash-table==5.0.0
-# debugpy @ file:///D:/bld/debugpy_1707444619227/work
-# decorator @ file:///home/conda/feedstock_root/build_artifacts/decorator_1641555617451/work
-# exceptiongroup @ file:///home/conda/feedstock_root/build_artifacts/exceptiongroup_1704921103267/work
-# executing @ file:///home/conda/feedstock_root/build_artifacts/executing_1698579936712/work
-fasteners==0.19
+dash_renderer==1.9.1
+dateparser==1.1.8
+db-dtypes==1.1.1
+debugpy==1.8.1
+decorator==5.1.1
+deltalake==0.10.0
+dill==0.3.8
+diskcache==5.6.3
+dnspython==2.6.1
+executing==2.0.1
 fiona==1.9.5
-Flask==3.0.2
+Flask==2.2.5
+Flask-Caching==2.0.2
+flatbuffers==23.5.26
+flatten-json==0.1.13
 folium==0.15.1
 fonttools==4.49.0
-geopandas==0.14.3
-gtfs_kit==6.1.0
-gunicorn==21.2.0
+frozenlist==1.4.1
+fsspec==2023.6.0
+gast==0.4.0
+gcsfs==2023.6.0
+geopandas==0.13.2
+gevent==22.10.2
+google-api-core==2.17.1
+google-auth==2.28.1
+google-auth-oauthlib==1.0.0
+google-cloud-core==2.4.1
+google-cloud-storage==1.44.0
+google-crc32c==1.5.0
+google-pasta==0.2.0
+google-resumable-media==2.7.0
+googleapis-common-protos==1.62.0
+greenlet==3.0.3
+grpcio==1.62.0
+gtfs-functions==2.0.4
+gtfs-realtime-bindings==0.0.7
+gunicorn==20.1.0
+h5py==3.10.0
 idna==3.6
-# importlib-metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1703269254275/work
-# ipykernel @ file:///D:/bld/ipykernel_1707326433944/work
-# ipython @ file:///D:/bld/ipython_1708707490842/work
+ipykernel==6.29.2
+ipython==8.22.1
+iso3166==2.1.1
 itsdangerous==2.1.2
-# jedi @ file:///home/conda/feedstock_root/build_artifacts/jedi_1696326070614/work
-Jinja2==3.1.2
-json2html==1.3.0
-# jupyter_client @ file:///home/conda/feedstock_root/build_artifacts/jupyter_client_1699283905679/work
-# jupyter_core @ file:///D:/bld/jupyter_core_1704727200100/work
+jedi==0.19.1
+jenkspy==0.4.0
+Jinja2==3.1.3
+jmespath==1.0.1
+joblib==1.3.2
+jupyter_client==8.6.0
+jupyter_core==5.7.1
+keras==2.13.1
 kiwisolver==1.4.5
-MarkupSafe==2.1.3
-matplotlib==3.8.3
-# matplotlib-inline @ file:///home/conda/feedstock_root/build_artifacts/matplotlib-inline_1660814786464/work
-# nest_asyncio @ file:///home/conda/feedstock_root/build_artifacts/nest-asyncio_1705850609492/work
-numpy==1.26.4
-# packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1696202382185/work
-pandas==2.2.1
-# parso @ file:///home/conda/feedstock_root/build_artifacts/parso_1638334955874/work
-patch-ng==1.17.4
-# pickleshare @ file:///home/conda/feedstock_root/build_artifacts/pickleshare_1602536217715/work
+libclang==16.0.6
+mapbox==0.18.1
+Markdown==3.5.2
+MarkupSafe==2.1.5
+matplotlib==3.7.1
+matplotlib-inline==0.1.6
+msgpack==1.0.7
+multidict==6.0.5
+multiprocess==0.70.16
+nest-asyncio==1.6.0
+numpy==1.24.3
+oauthlib==3.2.2
+opt-einsum==3.3.0
+orjson==3.9.1
+packaging==23.2
+pandas==1.5.3
+parso==0.8.3
+patsy==0.5.6
+pendulum==3.0.0
 pillow==10.2.0
-# platformdirs @ file:///home/conda/feedstock_root/build_artifacts/platformdirs_1706713388748/work
-plotly==5.19.0
-# prompt-toolkit @ file:///home/conda/feedstock_root/build_artifacts/prompt-toolkit_1702399386289/work
-# psutil @ file:///D:/bld/psutil_1705722515136/work
-# pure-eval @ file:///home/conda/feedstock_root/build_artifacts/pure_eval_1642875951954/work
-pycountry==23.12.11
-# Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1700607939962/work
+platformdirs==4.2.0
+plotly==5.15.0
+polyline==2.0.2
+prompt-toolkit==3.0.43
+protobuf==3.20.3
+protobuf3-to-dict==0.1.5
+psutil==5.9.8
+pure-eval==0.2.2
+pyarrow==12.0.1
+pyasn1==0.5.1
+pyasn1-modules==0.3.0
+pycparser==2.21
+Pygments==2.17.2
+pymongo==4.5.0
 pyparsing==3.1.1
 pyproj==3.6.1
 python-dateutil==2.8.2
-python-dotenv==1.0.1
-pytz==2024.1
-# pywin32==306
-PyYAML==6.0.1
-# pyzmq @ file:///D:/bld/pyzmq_1701783321880/work
+python-dotenv==1.0.0
+pytz==2023.3
+pywin32==306
+pyzmq==25.1.2
+regex==2023.6.3
 requests==2.31.0
-retrying==1.3.4
-Rtree==1.2.0
-seaborn==0.13.2
-setuptools==69.1.1
-shapely==2.0.3
+requests-oauthlib==1.3.1
+rsa==4.9
+s3transfer==0.10.0
+scikit-learn==1.2.2
+scipy==1.10.1
+seaborn==0.12.2
+shapely==2.0.1
 six==1.16.0
-# stack-data @ file:///home/conda/feedstock_root/build_artifacts/stack_data_1669632077133/work
+stack-data==0.6.3
+statsmodels==0.14.0
 tenacity==8.2.3
-# tornado @ file:///D:/bld/tornado_1708363233297/work
-# traitlets @ file:///home/conda/feedstock_root/build_artifacts/traitlets_1704212992681/work
-# typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1708904622550/work
+tensorboard==2.13.0
+tensorboard-data-server==0.7.2
+tensorflow==2.13.0
+tensorflow-estimator==2.13.0
+tensorflow-intel==2.13.0
+tensorflow-io-gcs-filesystem==0.31.0
+termcolor==2.4.0
+threadpoolctl==3.3.0
+time-machine==2.13.0
+tornado==6.4
+tqdm==4.65.0
+traitlets==5.14.1
+typing_extensions==4.5.0
 tzdata==2024.1
-urllib3==1.26.18
+tzlocal==5.2
+unicode==2.9
+uritemplate==4.1.1
+urllib3==2.0.7
 utm==0.7.0
-# wcwidth @ file:///home/conda/feedstock_root/build_artifacts/wcwidth_1704731205417/work
-Werkzeug==3.0.1
-wheel==0.42.0
+wcwidth==0.2.13
+Werkzeug==2.2.3
+wrapt==1.16.0
 xyzservices==2023.10.1
-# zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1695255097490/work
+yarl==1.9.4
+zipp==3.15.0
+zope.event==5.0
+zope.interface==6.2
