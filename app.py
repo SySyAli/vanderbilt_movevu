@@ -79,71 +79,119 @@ total_route_month_count = df.groupby(['ROUTE', 'MONTH_YEAR']).size().reset_index
 # print(total_route_month_count['MONTH_YEAR'].unique())
 # print(total_route_month_count.tail())
 
-app = Dash(__name__)
+app = Dash(__name__, title='Vanderbilt MoveVU Ridership Dashboard', suppress_callback_exceptions=True,)
 server = app.server
 
+# Define tab styles for a cleaner look
+tabs_styles = {
+    'height': '44px',
+    'alignItems': 'center'
+}
+tab_style = {
+    'borderBottom': '1px solid #d6d6d6',
+    'padding': '6px',
+    'fontWeight': 'bold'
+}
+
+tab_selected_style = {
+    'borderTop': '1px solid #d6d6d6',
+    'borderBottom': '1px solid #d6d6d6',
+    'backgroundColor': '#119DFF',
+    'color': 'white',
+    'padding': '6px'
+}
+
+# TODO : Add a loading component
 app.layout = html.Div([
-    html.H1('Top 6 Routes'),
-
-    # Dropdown or DatePickerRange for selecting the time period
-    dcc.DatePickerRange(
-        id='topsix-date-picker-range',
-        min_date_allowed=df['MONTH_YEAR'].min(),
-        max_date_allowed=df['MONTH_YEAR'].max(),
-        start_date=df['MONTH_YEAR'].min(),
-        end_date=df['MONTH_YEAR'].max(),
-        display_format='YYYY-MM'
+    html.H1('Vanderbilt Ridership Dashboard', style={'textAlign': 'center'}),
+    # Link button
+    html.A(
+        'Check out  the Vanderbilt Ridership Maps 2022/23!',  # Button text
+        href='https://movevu-busvisualization22-23.netlify.app/',  # URL to open
+        target='_blank',  # Open in a new tab
+        className='link-button',  # A class to style your button if needed
+        style={  # Styling directly here as an example
+            'display': 'inline-block',
+            'padding': '10px 20px',
+            'background-color': '#007bff',
+            'color': 'white',
+            'border-radius': '5px',
+            'text-decoration': 'none',
+            'margin-bottom': '20px'
+        }
     ),
-    # Graph for displaying the routes plot
-    dcc.Graph(id='routes-plot'),
-    html.H1("Swipes per Month"),
-    dcc.DatePickerRange(
-        id='swipes-date-picker-range',  # Changed ID to be unique
-        start_date=df['MONTH_YEAR'].min(),
-        end_date=df['MONTH_YEAR'].max(),
-        display_format='YYYY-MM'
-    ),
-    dcc.Graph(id='monthly-rides-graph'), 
+    # Use Tabs for navigation between graphs
+    dcc.Tabs(id='tabs', value='tab-1', children=[
+        dcc.Tab(label='Swipes per month Histogram', value='tab-1', style=tab_style, selected_style=tab_selected_style),
+        dcc.Tab(label='Unique Users Graph', value='tab-2', style=tab_style, selected_style=tab_selected_style),
+        dcc.Tab(label='Employee vs Student Ridership', value='tab-3', style=tab_style, selected_style=tab_selected_style),
+        dcc.Tab(label='Ridership by Time of Day', value='tab-4', style=tab_style, selected_style=tab_selected_style),
+        dcc.Tab(label='Routes Plot', value='tab-5', style=tab_style, selected_style=tab_selected_style),
+    ], style=tabs_styles),
     
-    html.H1("Ridership by Time of Day"),
-    
-    html.Div([
-        html.Label("Select Date Range:"),
-        dcc.DatePickerRange(
-            id='timedayhr-date-picker-range',
-            min_date_allowed=df['MONTH_YEAR'].min(),
-            max_date_allowed=df['MONTH_YEAR'].max(),
-            start_date=df['MONTH_YEAR'].min(),
-            end_date=df['MONTH_YEAR'].max(),
-            display_format='YYYY-MM'
-        ),
-    ]),
-    
-    dcc.Graph(id='ridership-time-graph'),
+    html.Div(id='tabs-content'),
+], style={'fontFamily': 'Helvetica, Arial, sans-serif'})
 
-    html.H1("Unique Users per Month"),
-    
-    html.Div([
-        html.Label("Select Date Range for Unique Users:"),
-        dcc.DatePickerRange(
-            id='unique-users-date-picker-range',
-            start_date=df['MONTH_YEAR'].min(),
-            end_date=df['MONTH_YEAR'].max(),
-            display_format='YYYY-MM'
-        ),
-    ]),
-    
-    dcc.Graph(id='unique-users-graph'),
 
-    html.H1("Employee vs Student Ridership per Month"),
-    dcc.DatePickerRange(
-        id='date-picker-range',
-        start_date=df['MONTH_YEAR'].min(),
-        end_date=df['MONTH_YEAR'].max(),
-        display_format='YYYY-MM'
-    ),
-    dcc.Graph(id='ridership-bar-graph')
-])
+# Callback to render the appropriate content based on the selected tab
+@app.callback(Output('tabs-content', 'children'), [Input('tabs', 'value')])
+def render_content(tab):
+    if tab == 'tab-1':
+        return html.Div([
+            dcc.DatePickerRange(
+                id='swipes-date-picker-range',  # Changed ID to be unique
+                start_date=df['MONTH_YEAR'].min(),
+                end_date=df['MONTH_YEAR'].max(),
+                display_format='YYYY-MM'
+            ),
+            dcc.Graph(id='monthly-rides-graph')
+        ])
+    elif tab == 'tab-2':
+        return html.Div([
+            dcc.DatePickerRange(
+                id='unique-users-date-picker-range',
+                start_date=df['MONTH_YEAR'].min(),
+                end_date=df['MONTH_YEAR'].max(),
+                display_format='YYYY-MM'
+            ),
+            dcc.Graph(id='unique-users-graph')
+        ])
+    elif tab == 'tab-3':
+        return html.Div([
+            dcc.DatePickerRange(
+                id='date-picker-range',
+                start_date=df['MONTH_YEAR'].min(),
+                end_date=df['MONTH_YEAR'].max(),
+                display_format='YYYY-MM'
+            ),
+            dcc.Graph(id='ridership-bar-graph')
+        ])
+    elif tab == 'tab-4':
+        return html.Div([
+            dcc.DatePickerRange(
+                id='timedayhr-date-picker-range',
+                min_date_allowed=df['MONTH_YEAR'].min(),
+                max_date_allowed=df['MONTH_YEAR'].max(),
+                start_date=df['MONTH_YEAR'].min(),
+                end_date=df['MONTH_YEAR'].max(),
+                display_format='YYYY-MM'
+            ),
+            dcc.Graph(id='ridership-time-graph')
+        ])
+    elif tab == 'tab-5':
+        return html.Div([
+            dcc.DatePickerRange(
+                id='topsix-date-picker-range',
+                min_date_allowed=df['MONTH_YEAR'].min(),
+                max_date_allowed=df['MONTH_YEAR'].max(),
+                start_date=df['MONTH_YEAR'].min(),
+                end_date=df['MONTH_YEAR'].max(),
+                display_format='YYYY-MM'
+            ),
+            dcc.Graph(id='routes-plot')
+        ])
+    else:
+        return html.Div('Select a tab to view corresponding data.')
 
 # TOP 6 ROUTES GRAPH
 @app.callback(
@@ -176,7 +224,7 @@ def update_graph(start_date, end_date):
     
     # Create a bar chart using Plotly Express
     fig = px.bar(ride_counts, x='MONTH_YEAR', y='RIDE_COUNT', 
-                 title='Monthly Analysis of Rides',
+                 title='Monthly Analysis of the Top 6 Rides',
                  labels={'MONTH_YEAR': 'Month', 'RIDE_COUNT': 'Number of Rides'})
     fig.update_xaxes(tickangle=-45)
     
@@ -191,7 +239,7 @@ def plot_all_routes_with_plotly(route_month_counts):
     # Find the top 6 routes by total ridership
     top_6_routes = route_ridership.sort_values('RIDERSHIP', ascending=False).head(6)
     print("Top 6 Routes by Ridership from 2017 to Dec. 2023")
-    print(top_6_routes)
+    # print(top_6_routes)
 
     # Make a list of the top 6 routes
     top_6_routes_list = list(top_6_routes['ROUTE'])
