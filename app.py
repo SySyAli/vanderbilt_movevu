@@ -134,6 +134,15 @@ app.layout = html.Div([
     ]),
     
     dcc.Graph(id='unique-users-graph'),
+
+    html.H1("Employee vs Student Ridership per Month"),
+    dcc.DatePickerRange(
+        id='date-picker-range',
+        start_date=df['MONTH_YEAR'].min(),
+        end_date=df['MONTH_YEAR'].max(),
+        display_format='YYYY-MM'
+    ),
+    dcc.Graph(id='ridership-bar-graph')
 ])
 
 # TOP 6 ROUTES GRAPH
@@ -259,6 +268,30 @@ def update_unique_users_graph(start_date, end_date):
                   labels={'MONTH_YEAR': 'Month', 'UNIQUE_USERS': 'Number of Unique Users'})
     fig.update_xaxes(tickangle=-45)
     
+    return fig
+
+
+# Employee vs student ridership per month graph callback
+@app.callback(
+    Output('ridership-bar-graph', 'figure'),
+    [Input('date-picker-range', 'start_date'),
+     Input('date-picker-range', 'end_date')]
+)
+def update_graph(start_date, end_date):
+    # Filter data based on the date range selected
+    filtered_df = df[(df['MONTH_YEAR'] >= start_date) & (df['MONTH_YEAR'] <= end_date)]
+
+    # Group by month and employee/student status
+    monthly_ridership = filtered_df.groupby(['MONTH_YEAR', 'EMPLOYEE_OR_STUDENT']).size().reset_index(name='COUNT')
+
+    # Create the bar chart
+    fig = px.bar(monthly_ridership, x='MONTH_YEAR', y='COUNT', color='EMPLOYEE_OR_STUDENT', barmode='group',
+                 title='Employee vs Student Ridership per Month',
+                 labels={'COUNT': 'Number of Rides', 'MONTH_YEAR': 'Month'})
+
+    # Update layout if necessary
+    fig.update_layout(xaxis_tickangle=-45)
+
     return fig
 
 
