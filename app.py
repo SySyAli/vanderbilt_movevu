@@ -94,6 +94,7 @@ total_route_month_count = df.groupby(['ROUTE', 'MONTH_YEAR']).size().reset_index
 # print(total_route_month_count.tail())
 
 app = Dash(__name__)
+server = app.server
 
 app.layout = html.Div([
     html.H1('Top 6 Routes'),
