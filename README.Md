@@ -10,7 +10,7 @@
   ' alt="Flask"></a>
 </p>
 
-![Vanderbilt University Logo)](images\Vanderbilt_University_logo.png)
+![Vanderbilt University Logo](.\images\Vanderbilt_University_logo.png)
 ## Introduction
 The Vanderbilt MoveVU Ridership Dashboard is an interactive application designed to visualize the ridership data of Nashville's bus routes. This dashboard utilizes Plotly and Dash to render dynamic visualizations, helping to explore trends and insights about the frequency and demographics of ridership across various bus routes.
 ![Dashboard preview)](images\vanderbilt_ridership_dashboard_png.png)
