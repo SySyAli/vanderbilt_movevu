@@ -1,5 +1,5 @@
 dash
 numpy
-pandas
 plotly
+pandas
 gunicorn
