@@ -1,13 +1,9 @@
 # Vanderbilt MoveVU Ridership Dashboard
 <p align='center'>
-  <a target="_blank" href='https://www.python.org/'><img src='https://img.shields.io/badge/python-lightgray?style=for-the-badge&logo=python&link=https%3A%2F%2Fwww.python.org%2F
-  ' alt="Python"></a>
-  <a target="_blank" href='https://pandas.pydata.org/'><img src='https://img.shields.io/badge/Pandas-purple?style=for-the-badge&logo=pandas&link=https%3A%2F%2Fpandas.pydata.org%2F
-  ' alt="Pandas"></a>
- <a target="_blank" href='https://dash.plotly.com/'><img src="https://img.shields.io/badge/Plotly-blue?style=for-the-badge&logo=plotly&link=https%3A%2F%2Fdash.plotly.com%2F
- " alt="Plotly"/></a>
-  <a target="_blank" href='https://flask.palletsprojects.com/en/3.0.x/'><img src='https://img.shields.io/badge/Flask-green?style=for-the-badge&logo=flask&link=https%3A%2F%2Fflask.palletsprojects.com%2Fen%2F3.0.x%2F
-  ' alt="Flask"></a>
+  <a target="_blank" href='https://www.python.org/'><img src='https://img.shields.io/badge/python-lightgray?style=for-the-badge&logo=python' alt="Python"></a>
+  <a target="_blank" href='https://pandas.pydata.org/'><img src='https://img.shields.io/badge/Pandas-purple?style=for-the-badge&logo=pandas' alt="Pandas"></a>
+ <a target="_blank" href='https://dash.plotly.com/'><img src='https://img.shields.io/badge/Plotly-blue?style=for-the-badge&logo=plotly' alt="Plotly"/></a>
+  <a target="_blank" href='https://flask.palletsprojects.com/en/3.0.x/'><img src='https://img.shields.io/badge/Flask-green?style=for-the-badge&logo=flask' alt="Flask"></a>
 </p>
 
 ![Vanderbilt University Logo](images/Vanderbilt_University_logo.png)
