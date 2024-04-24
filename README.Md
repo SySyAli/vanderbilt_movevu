@@ -1,4 +1,15 @@
 # Vanderbilt MoveVU Ridership Dashboard
+<p align='center'>
+  <a target="_blank" href='https://www.python.org/'><img src='https://img.shields.io/badge/python-lightgray?style=for-the-badge&logo=python&link=https%3A%2F%2Fwww.python.org%2F
+  ' alt="Python"></a>
+  <a target="_blank" href='https://pandas.pydata.org/'><img src='https://img.shields.io/badge/Pandas-purple?style=for-the-badge&logo=pandas&link=https%3A%2F%2Fpandas.pydata.org%2F
+  ' alt="Pandas"></a>
+ <a target="_blank" href='https://dash.plotly.com/'><img src="https://img.shields.io/badge/Plotly-blue?style=for-the-badge&logo=plotly&link=https%3A%2F%2Fdash.plotly.com%2F
+ " alt="Plotly"/></a>
+  <a target="_blank" href='https://flask.palletsprojects.com/en/3.0.x/'><img src='https://img.shields.io/badge/Flask-green?style=for-the-badge&logo=flask&link=https%3A%2F%2Fflask.palletsprojects.com%2Fen%2F3.0.x%2F
+  ' alt="Flask"></a>
+</p>
+
 ![Vanderbilt University Logo)](images\Vanderbilt_University_logo.png)
 ## Introduction
 The Vanderbilt MoveVU Ridership Dashboard is an interactive application designed to visualize the ridership data of Nashville's bus routes. This dashboard utilizes Plotly and Dash to render dynamic visualizations, helping to explore trends and insights about the frequency and demographics of ridership across various bus routes.
@@ -41,3 +52,5 @@ Additionally, Conda is recommended for managing your Python environment and depe
 - **Data Visualization**: View different graphical representations of the data like histograms, bar charts, and line plots.
 - **Interactive Elements**: Use tabs and date pickers to filter and view data across different dimensions such as time periods and rider demographics.
 - **Dynamic Updates**: The graphs update dynamically based on user interactions with elements like date ranges and tab selections.
+
+The testing directory contains some data analysis that was done to determine the visualizations used for the dashboard
