@@ -64,6 +64,8 @@ print("Listed Routes:", list_WE_GO_ALL_ROUTES)
 print("Number of Routes:", len(list_WE_GO_ALL_ROUTES))
 
 df = pd.read_parquet('movevu.parquet')
+columns_to_check = ['CAMPUS_ID', 'FIRST_NAME', 'LAST_NAME', 'EMPLOYEE_OR_STUDENT']
+df = df.dropna(subset=columns_to_check)
 # Data cleaning and preparation steps
 df['RIDE_DATE'] = pd.to_datetime(df['RIDE_DATE'])
 df['MONTH_YEAR'] = df['RIDE_DATE'].dt.strftime('%Y-%m')
@@ -71,10 +73,13 @@ df['Hour'] = df['RIDE_DATE'].dt.hour
 
 # print("Max Date MM-YY", df['MONTH_YEAR'].max())
 # print(df['MONTH_YEAR'].unique())
-
 # Calculate the total ridership for each route per month - Using MONTH and RIDE_DATE FROM ABOVE
 # print(df.tail())
 total_route_month_count = df.groupby(['ROUTE', 'MONTH_YEAR']).size().reset_index(name='COUNT')
+# merge 3 and 5, and 25/75 ridership in total_route_month_count
+total_route_month_count['ROUTE'] = total_route_month_count['ROUTE'].replace(["3", "5"], "3")
+total_route_month_count['ROUTE'] = total_route_month_count['ROUTE'].replace(["25", "75"], "75")
+total_route_month_count = total_route_month_count.groupby(['ROUTE', 'MONTH_YEAR'])['COUNT'].sum().reset_index()
 # print("Max Date MM-YY TRMC:", total_route_month_count['MONTH_YEAR'].max())
 # print(total_route_month_count['MONTH_YEAR'].unique())
 # print(total_route_month_count.tail())
@@ -101,7 +106,6 @@ tab_selected_style = {
     'padding': '6px'
 }
 
-# TODO : Add a loading component
 app.layout = html.Div([
     html.H1('Vanderbilt Ridership Dashboard', style={'textAlign': 'center'}),
     # Link button
@@ -128,7 +132,6 @@ app.layout = html.Div([
         dcc.Tab(label='Ridership by Time of Day', value='tab-4', style=tab_style, selected_style=tab_selected_style),
         dcc.Tab(label='Routes Plot', value='tab-5', style=tab_style, selected_style=tab_selected_style),
     ], style=tabs_styles),
-    
     html.Div(id='tabs-content'),
 ], style={'fontFamily': 'Helvetica, Arial, sans-serif'})
 
@@ -139,12 +142,16 @@ def render_content(tab):
     if tab == 'tab-1':
         return html.Div([
             dcc.DatePickerRange(
-                id='swipes-date-picker-range',  # Changed ID to be unique
+                id='swipes-date-picker-range',
                 start_date=df['MONTH_YEAR'].min(),
                 end_date=df['MONTH_YEAR'].max(),
                 display_format='YYYY-MM'
             ),
-            dcc.Graph(id='monthly-rides-graph')
+            dcc.Loading(
+                id="loading-1",
+                type="default",
+                children=dcc.Graph(id='monthly-rides-graph')
+            )
         ])
     elif tab == 'tab-2':
         return html.Div([
@@ -154,7 +161,11 @@ def render_content(tab):
                 end_date=df['MONTH_YEAR'].max(),
                 display_format='YYYY-MM'
             ),
-            dcc.Graph(id='unique-users-graph')
+            dcc.Loading(
+                id="loading-1",
+                type="default",
+                children=dcc.Graph(id='unique-users-graph')
+            )
         ])
     elif tab == 'tab-3':
         return html.Div([
@@ -164,7 +175,11 @@ def render_content(tab):
                 end_date=df['MONTH_YEAR'].max(),
                 display_format='YYYY-MM'
             ),
-            dcc.Graph(id='ridership-bar-graph')
+            dcc.Loading(
+                id="loading-1",
+                type="default",
+                children=dcc.Graph(id='ridership-bar-graph')
+            )
         ])
     elif tab == 'tab-4':
         return html.Div([
@@ -176,7 +191,11 @@ def render_content(tab):
                 end_date=df['MONTH_YEAR'].max(),
                 display_format='YYYY-MM'
             ),
-            dcc.Graph(id='ridership-time-graph')
+            dcc.Loading(
+                id="loading-1",
+                type="default",
+                children=dcc.Graph(id='ridership-time-graph')
+            )
         ])
     elif tab == 'tab-5':
         return html.Div([
@@ -188,7 +207,11 @@ def render_content(tab):
                 end_date=df['MONTH_YEAR'].max(),
                 display_format='YYYY-MM'
             ),
-            dcc.Graph(id='routes-plot')
+            dcc.Loading(
+                id="loading-1",
+                type="default",
+                children=dcc.Graph(id='routes-plot')
+            )
         ])
     else:
         return html.Div('Select a tab to view corresponding data.')
@@ -224,7 +247,7 @@ def update_graph(start_date, end_date):
     
     # Create a bar chart using Plotly Express
     fig = px.bar(ride_counts, x='MONTH_YEAR', y='RIDE_COUNT', 
-                 title='Monthly Analysis of the Top 6 Rides',
+                 title='Swipes per Month',
                  labels={'MONTH_YEAR': 'Month', 'RIDE_COUNT': 'Number of Rides'})
     fig.update_xaxes(tickangle=-45)
     
@@ -233,16 +256,23 @@ def update_graph(start_date, end_date):
 # HELPER FUNCTIONS
 def plot_all_routes_with_plotly(route_month_counts):
     fig = go.Figure()
-    # print("Max Date inside plot_all_routes_with_plotly:", route_month_counts['MONTH_YEAR'].max())
-    # print(route_month_counts['MONTH_YEAR'].unique())
+
     route_ridership = route_month_counts.groupby('ROUTE')['COUNT'].sum().reset_index(name='RIDERSHIP')
+    # combine 3 and 5 ridership
+    route_ridership.loc[route_ridership['ROUTE'] == 3, 'RIDERSHIP'] += route_ridership.loc[route_ridership['ROUTE'] == 5, 'RIDERSHIP']
+    route_ridership = route_ridership[route_ridership['ROUTE'] != 5]
+    # combine 25 and 75 ridership
+    route_ridership.loc[route_ridership['ROUTE'] == 75, 'RIDERSHIP'] += route_ridership.loc[route_ridership['ROUTE'] == 25, 'RIDERSHIP']
+    route_ridership = route_ridership[route_ridership['ROUTE'] != 25]
     # Find the top 6 routes by total ridership
     top_6_routes = route_ridership.sort_values('RIDERSHIP', ascending=False).head(6)
-    print("Top 6 Routes by Ridership from 2017 to Dec. 2023")
+    # print("Route Ridership:" , route_ridership)
+    # print("Top 6 Routes by Ridership from 2017 to Dec. 2023")
     # print(top_6_routes)
 
     # Make a list of the top 6 routes
     top_6_routes_list = list(top_6_routes['ROUTE'])
+    # print("Top 6 Routes List:", top_6_routes_list)
 
     for route in route_month_counts['ROUTE'].unique():
         if route in top_6_routes_list:
