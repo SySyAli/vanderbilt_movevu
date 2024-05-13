@@ -244,7 +244,6 @@ def update_graph(start_date, end_date):
     
     # Group by 'MONTH_YEAR' and count the number of rides, then reset the index to make 'RIDE_COUNT' a column
     ride_counts = filtered_df.groupby('MONTH_YEAR').size().reset_index(name='RIDE_COUNT')
-    
     # Create a bar chart using Plotly Express
     fig = px.bar(ride_counts, x='MONTH_YEAR', y='RIDE_COUNT', 
                  title='Swipes per Month',
