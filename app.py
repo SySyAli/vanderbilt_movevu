@@ -106,8 +106,15 @@ tab_selected_style = {
     'padding': '6px'
 }
 
+image_path1 = 'assets/Vanderbilt_University_logo.png'
+image_path2 = 'assets/WeGoLogo.png'
+
 app.layout = html.Div([
-    html.H1('Vanderbilt Ridership Dashboard', style={'textAlign': 'center'}),
+    html.Div([
+        html.Img(src=image_path1, style={'width': '50%', 'height': '50%', 'margin': 'auto'}),
+        html.Img(src=image_path2, style={'width': '50%', 'height': '50%', 'margin': 'auto'}),
+    ], style={'display': 'flex', 'justifyContent': 'space-around'}),
+    html.H1('Vanderbilt University and WeGo Ridership Dashboard', style={'textAlign': 'center'}),
     # Link button
     html.A(
         'Check out  the Vanderbilt Ridership Maps 2022/23!',  # Button text
